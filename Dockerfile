@@ -15,7 +15,8 @@ COPY storage storage
 
 # Gradle 빌드 실행
 RUN chmod +x ./gradlew && \
-    ./gradlew clean :core:core-api:bootJar --no-daemon
+    ./gradlew clean :core:core-api:bootJar --no-daemon && \
+    rm -rf /root/.gradle /root/.kotlin /root/.m2 /app/.gradle
 
 # 2단계: Runtime stage
 FROM amazoncorretto:21
