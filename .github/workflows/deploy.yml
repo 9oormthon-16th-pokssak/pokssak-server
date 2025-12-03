@@ -51,7 +51,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -f docker/Dockerfile -t 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} .
+          docker build -t 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} .
           docker tag 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:latest
           docker push 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }}
           docker push 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:latest
@@ -111,6 +111,6 @@ jobs:
           echo "Current context:"
           kubectl config current-context
           echo "Applying deployment..."
-          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/core/deployment.yaml
           kubectl set image deployment/pokssak pokssak=837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} -n goormthon-6
           kubectl rollout status deployment/pokssak -n goormthon-6
