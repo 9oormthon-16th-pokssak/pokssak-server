@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: pokssak
-        image: 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:build-19
+        image: 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:build-21
         env:
         - name: REDIS_HOST
           value: redis-0.redis.goormthon-6.svc.cluster.local
