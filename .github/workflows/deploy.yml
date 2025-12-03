@@ -65,14 +65,44 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
+          # Validate KUBE_CONFIG secret exists
+          if [ -z "$KUBE_CONFIG" ]; then
+            echo "ERROR: KUBE_CONFIG secret is empty or not set"
+            exit 1
+          fi
+
+          # Create kube directory
           mkdir -p $HOME/.kube
+
+          # Decode and save kubeconfig
           echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
+
+          # Validate kubeconfig file
+          if [ ! -s $HOME/.kube/config ]; then
+            echo "ERROR: Kubeconfig file is empty after decoding"
+            echo "Please check if KUBE_CONFIG secret is properly base64 encoded"
+            exit 1
+          fi
+
+          # Set permissions
           chmod 600 $HOME/.kube/config
-          echo "Kubeconfig file created"
-          cat $HOME/.kube/config | head -n 5
+
+          # Show file info
+          echo "✓ Kubeconfig file created successfully"
+          echo "File size: $(wc -c < $HOME/.kube/config) bytes"
+          echo "First few lines:"
+          head -n 5 $HOME/.kube/config
+
+          # Set KUBECONFIG and verify connection
           export KUBECONFIG=$HOME/.kube/config
+
+          echo "kubectl version:"
           kubectl version --client
+
+          echo "Cluster info:"
           kubectl cluster-info
+
+          echo "Current context:"
           kubectl config current-context
 
       - name: Deploy to Kubernetes
