@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+.claude
+
+# Build artifacts (will be built inside Docker)
+build
+.gradle
+**/build/
+**/.gradle/
+
+# Documentation
+docs
+*.md
+HELP.md
+
+# Docker
+docker
+Dockerfile
+.dockerignore
+
+# K8s
+k8s
+
+# CI/CD
+.github
+
+# Environment
+.env
+.DS_Store
+
+# Temporary files
+*.log
+*.tmp
+*.swp
