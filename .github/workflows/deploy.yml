@@ -68,9 +68,19 @@ jobs:
           mkdir -p $HOME/.kube
           echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
+          echo "Kubeconfig file created"
+          cat $HOME/.kube/config | head -n 5
+          export KUBECONFIG=$HOME/.kube/config
+          kubectl version --client
+          kubectl cluster-info
+          kubectl config current-context
 
       - name: Deploy to Kubernetes
         run: |
+          export KUBECONFIG=$HOME/.kube/config
+          echo "Current context:"
+          kubectl config current-context
+          echo "Applying deployment..."
           kubectl apply -f k8s/deployment.yml
           kubectl set image deployment/pokssak pokssak=837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} -n goormthon-6
           kubectl rollout status deployment/pokssak -n goormthon-6
