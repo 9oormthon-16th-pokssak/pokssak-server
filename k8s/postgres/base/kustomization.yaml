@@ -18,6 +18,7 @@ configMapGenerator:
 generatorOptions:
   disableNameSuffixHash: true
 
-commonLabels:
-  app: postgres
-  includeSelectors: true
+labels:
+  - includeSelectors: true
+    pairs:
+      app: postgres
