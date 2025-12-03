@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: goormthon-postgres
+    container_name: goormthon-16th-postgres
     environment:
       POSTGRES_DB: goormthon
       POSTGRES_USER: postgres
@@ -13,31 +13,11 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: goormthon-redis
+    container_name: goormthon-16th-redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
-
-  goormthon-app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    container_name: goormthon-app
-    ports:
-      - "8080:8080"
-    environment:
-      DATASOURCE_DB_CORE_JDBC_URL: jdbc:postgresql://postgres:5432/goormthon
-      DATASOURCE_DB_CORE_USERNAME: postgres
-      DATASOURCE_DB_CORE_PASSWORD: postgres
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      ACCESS_TOKEN_EXPIRATION_SECONDS: 2880
-      REFRESH_TOKEN_EXPIRATION_SECONDS: 43200
-      JWT_SECRET_KEY: goormthonJwtSecretKeyForAuthenticationSecuritySystem2024!@#
-    depends_on:
-      - postgres
-      - redis
 
 volumes:
   postgres_data:

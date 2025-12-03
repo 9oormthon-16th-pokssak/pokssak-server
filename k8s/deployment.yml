@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pokssak
+  namespace: goormthon-6
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pokssak
+  template:
+    metadata:
+      labels:
+        app: pokssak
+    spec:
+      containers:
+      - name: pokssak
+        image: 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:latest
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: REDIS_HOST
+          value: redis-0.redis.goormthon-6.svc.cluster.local
+        - name: REDIS_PORT
+          value: "6379"
+        - name: DATASOURCE_DB_CORE_JDBC_URL
+          value: jdbc:postgresql://postgres.goormthon-6.svc.cluster.local:5432/goormthon
+        - name: DATASOURCE_DB_CORE_USERNAME
+          value: postgres
+        - name: DATASOURCE_DB_CORE_PASSWORD
+          value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pokssak
+  namespace: goormthon-6
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+spec:
+  selector:
+    app: pokssak
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pokssak
+  namespace: goormthon-6
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: 'pokssak-api.goorm.training'
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pokssak
+            port:
+              number: 80

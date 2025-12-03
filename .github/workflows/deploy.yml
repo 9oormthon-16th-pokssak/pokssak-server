@@ -1,0 +1,76 @@
+name: deploy.yml
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    environment: DEV
+    name: CD
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ "21" ]
+        kotlin-version: [ "2.1.0" ]
+        distribution: [ "corretto" ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: ${{ matrix.distribution }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Setup Gradle
+        id: gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/release' }}
+
+      - name: Build with Gradle
+        run: ./gradlew clean :core:core-api:bootJar --no-daemon
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        run: |
+          docker build -f docker/Dockerfile -t 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} .
+          docker tag 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:latest
+          docker push 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }}
+          docker push 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:latest
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Configure kubectl
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          mkdir -p $HOME/.kube
+          echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl set image deployment/pokssak pokssak=837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:${{ github.sha }} -n goormthon-6
+          kubectl rollout status deployment/pokssak -n goormthon-6

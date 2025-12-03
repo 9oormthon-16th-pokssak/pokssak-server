@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: goormthon-6
+
+resources:
+  - ../../base
+
+images:
+  - name: postgis/postgis
+    newTag: "16-3.4"
+
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: postgres-secret
+      stringData:
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "postgres"
+        POSTGRES_DB: "goormthon"
