@@ -4,10 +4,11 @@ kind: Kustomization
 namespace: goormthon-6
 
 resources:
+  - configmap.yaml
   - service.yaml
   - statefulset.yaml
 
 images:
-  - name: redis
+  - name: redis:7.2-alpine
     newName: redis
-    newTag: "7.2"
+    newTag: "7.2-alpine"
