@@ -109,3 +109,10 @@ subprojects {
 
 project("core") { tasks.configureEach { enabled = false } }
 project("storage") { tasks.configureEach { enabled = false } }
+
+// JPA가 필요한 모듈에만 의존성 추가
+configure(subprojects.filter { it.name in listOf("core-domain", "core-rdb") }) {
+    dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    }
+}
