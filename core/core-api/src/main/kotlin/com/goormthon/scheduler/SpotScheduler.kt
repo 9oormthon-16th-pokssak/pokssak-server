@@ -110,7 +110,7 @@ class SpotScheduler(
         }
     }
 
-    @Scheduled(cron = "* 0/10 * * * *")
+    @Scheduled(cron = "* 0/30 * * * *")
     fun createSpotWithTagsJob() {
         try {
             val existingSpots = spotService.findAllSpots().toMutableList()
@@ -126,9 +126,9 @@ class SpotScheduler(
                     2. 응답은 오직 JSON Array 문자열만 반환할 것. (Markdown 코드 블록 ```json ... ``` 없이 순수 텍스트로)
                     3. 중복된 장소가 없어야 함.
                     4. 설명(description)과 팁(tip)은 한국어로, 친절하고 구체적으로 작성.
-                    5. 위경도(latitude, longitude)는 실제 구글맵 기준 데이터여야 함. 진짜 정확한 위경도를 넣어야해. 한번 검증을 진행해보고 넣는 것이 좋아.
+                    5. 위경도(latitude, longitude)는 실제 구글맵 기준 데이터여야 함. 진짜 정확한 위경도를 넣어야해. 한번 검증을 진행해보고 넣는 것이 좋아. 그리고, 무조건 장소 POINT로 해야하지, 전역적으로 포괄적인 좌표가 아니야.
                     6. 그리고 가중치(weight)라는 것이 있어. 가중치는 0.0에서 1.0 사이의 값으로, 장소의 중요도나 인기도를 나타내. 1.0에 가까울수록 더 중요하거나 인기 있는 장소야. 각 장소마다 적절한 가중치를 부여해줘.
-                    7. ${spotNames.joinToString(", ")} 이 장소들은 이미 데이터베이스에 있어. 이 장소들은 절대 포함하지 마.
+                    7. (${spotNames.joinToString(", ")}) 이 장소들은 이미 데이터베이스에 있어. 이 장소들은 절대 포함하지 마.
 
                     [JSON 데이터 스키마]
                     응답은 아래 구조를 가진 객체들의 배열([])이어야 한다.
