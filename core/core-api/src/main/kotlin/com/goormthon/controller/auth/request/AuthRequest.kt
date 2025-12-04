@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import com.goormthon.auth.command.AuthCommand
+import com.goormthon.enums.Keyword
 
 @Schema(description = "인증 요청")
 sealed class AuthRequest {
@@ -33,12 +34,12 @@ sealed class AuthRequest {
         val name: String,
         @Schema(description = "키워드")
         @field:NotBlank
-        val keyword: String,
+        val keyword: Keyword,
     ) {
         fun toCommand() =
             AuthCommand.SignupV2(
                 name = name,
-                keyword = keyword,
+                keyword = keyword.description,
             )
     }
 

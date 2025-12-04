@@ -2,6 +2,7 @@ package com.goormthon.controller.spot
 
 import com.goormthon.controller.spot.response.SpotAllResponse
 import com.goormthon.controller.spot.response.SpotDetailResponse
+import com.goormthon.enums.Keyword
 import com.goormthon.spot.SpotFacade
 import com.goormthon.user.User
 import io.swagger.v3.oas.annotations.Parameter
@@ -20,7 +21,7 @@ class SpotController(
 ) {
     @GetMapping
     fun findAllSpotBy(
-        @RequestParam @Parameter(name = "keyword", description = "키워드") keyword: String?,
+        @RequestParam @Parameter(name = "keyword", description = "키워드") keyword: Keyword?,
         @RequestParam @Parameter(name = "swLat", description = "남서쪽 위도") swLat: Double?,
         @RequestParam @Parameter(name = "swLng", description = "남서쪽 경도") swLng: Double?,
         @RequestParam @Parameter(name = "neLat", description = "북동쪽 위도") neLat: Double?,
@@ -29,7 +30,7 @@ class SpotController(
     ): SpotAllResponse =
         SpotAllResponse.from(
             spotFacade.findAllSpots(
-                keyword = keyword,
+                keyword = keyword?.description,
                 swLat = swLat,
                 swLng = swLng,
                 neLat = neLat,
