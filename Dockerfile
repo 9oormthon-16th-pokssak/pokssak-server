@@ -12,6 +12,7 @@ COPY gradle.properties .
 # 소스 코드 복사
 COPY core core
 COPY storage storage
+COPY external external
 
 # Gradle 빌드 실행
 RUN chmod +x ./gradlew && \
