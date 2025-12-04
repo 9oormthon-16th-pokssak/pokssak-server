@@ -66,4 +66,16 @@ class SpotFacade(
             .take(3)
             .toList()
     }
+
+    fun findLikedSpotsByUser(userId: Long): List<Spot.Info> {
+        val likedSpots = userSpotLikeService.findAllByUserId(userId)
+        val spotIds = likedSpots.map { it.spotId }
+        return spotService.findAllByIds(spotIds)
+    }
+
+    fun findVisitedSpotsByUser(userId: Long): List<Spot.Info> {
+        val visitedSpots = userSpotVisitService.findAllByUserId(userId)
+        val spotIds = visitedSpots.map { it.spotId }
+        return spotService.findAllByIds(spotIds)
+    }
 }

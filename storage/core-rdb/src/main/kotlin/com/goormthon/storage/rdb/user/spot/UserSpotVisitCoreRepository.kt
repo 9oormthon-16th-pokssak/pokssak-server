@@ -1,6 +1,7 @@
 package com.goormthon.storage.rdb.user.spot
 
 import com.goormthon.support.tx.Tx
+import com.goormthon.user.spot.UserSpotVisit
 import com.goormthon.user.spot.UserSpotVisitRepository
 import org.springframework.stereotype.Repository
 
@@ -20,5 +21,11 @@ class UserSpotVisitCoreRepository(
                 val newVisit = UserSpotVisitEntity(userId = userId, spotId = spotId)
                 userSpotVisitJpaRepository.save(newVisit)
             }
+        }
+
+    override fun findAllByUserId(userId: Long): List<UserSpotVisit.Info> =
+        Tx.readable {
+            val entities = userSpotVisitJpaRepository.findAllByUserIdAndDeletedAtIsNull(userId)
+            return@readable entities.map { it.toInfo() }
         }
 }

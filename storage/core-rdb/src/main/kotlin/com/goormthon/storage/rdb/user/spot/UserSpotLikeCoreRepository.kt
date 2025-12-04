@@ -1,6 +1,7 @@
 package com.goormthon.storage.rdb.user.spot
 
 import com.goormthon.support.tx.Tx
+import com.goormthon.user.spot.UserSpotLike
 import com.goormthon.user.spot.UserSpotLikeRepository
 import org.springframework.stereotype.Repository
 
@@ -27,4 +28,9 @@ class UserSpotLikeCoreRepository(
                 userSpotLikeJpaRepository.delete(it)
             }
         }
+
+    override fun findAllByUserId(userId: Long): List<UserSpotLike.Info> = Tx.readable {
+        val entities = userSpotLikeJpaRepository.findAllByUserIdAndDeletedAtIsNull(userId)
+        return@readable entities.map { it.toInfo() }
+    }
 }

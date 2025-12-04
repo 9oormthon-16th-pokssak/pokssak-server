@@ -11,4 +11,7 @@ class UserSpotVisitService(
 
     fun visitSpot(userId: Long, spotId: Long) =
         userSpotVisitRepository.visitSpot(userId, spotId)
+
+    fun findAllByUserId(userId: Long): List<UserSpotVisit.Info> =
+        userSpotVisitRepository.findAllByUserId(userId)
 }

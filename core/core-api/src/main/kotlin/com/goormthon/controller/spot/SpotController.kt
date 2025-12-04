@@ -50,4 +50,14 @@ class SpotController(
     fun recommendSpot(
         @Parameter(hidden = true) user: User,
     ): SpotAllResponse = SpotAllResponse.from(spotFacade.recommend(user.id))
+
+    @GetMapping("/likes")
+    fun getLikedSpots(
+        @Parameter(hidden = true) user: User,
+    ): SpotAllResponse = SpotAllResponse.from(spotFacade.findLikedSpotsByUser(user.id))
+
+    @GetMapping("/visits")
+    fun getVisitedSpots(
+        @Parameter(hidden = true) user: User,
+    ): SpotAllResponse = SpotAllResponse.from(spotFacade.findVisitedSpotsByUser(user.id))
 }

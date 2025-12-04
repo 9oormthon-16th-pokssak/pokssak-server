@@ -14,4 +14,7 @@ class UserSpotLikeService(
 
     fun dislikeSpot(userId: Long, spotId: Long) =
         userSpotLikeRepository.dislikeSpot(userId, spotId)
+
+    fun findAllByUserId(userId: Long): List<UserSpotLike.Info> =
+        userSpotLikeRepository.findAllByUserId(userId)
 }
