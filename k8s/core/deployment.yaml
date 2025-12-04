@@ -18,7 +18,7 @@ spec:
         image: 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:build-29
         envFrom:
         - secretRef:
-          - name: pokssak-server-secret
+            name: pokssak-server-secret
         env:
         - name: REDIS_HOST
           value: redis-0.redis.goormthon-6.svc.cluster.local
