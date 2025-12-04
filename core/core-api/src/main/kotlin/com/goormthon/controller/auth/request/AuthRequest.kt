@@ -34,12 +34,12 @@ sealed class AuthRequest {
         val name: String,
         @Schema(description = "키워드")
         @field:NotBlank
-        val keyword: Keyword,
+        val keyword: String,
     ) {
         fun toCommand() =
             AuthCommand.SignupV2(
                 name = name,
-                keyword = keyword.description,
+                keyword = Keyword.valueOf(keyword).description,
             )
     }
 
