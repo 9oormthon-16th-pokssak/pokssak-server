@@ -16,6 +16,9 @@ spec:
       containers:
       - name: pokssak
         image: 837126493345.dkr.ecr.ap-northeast-2.amazonaws.com/goormthon-6/backend:build-28
+        envFrom:
+        - secretRef:
+          - name: pokssak-server-secret
         env:
         - name: REDIS_HOST
           value: redis-0.redis.goormthon-6.svc.cluster.local
@@ -27,6 +30,7 @@ spec:
           value: postgres
         - name: DATASOURCE_DB_CORE_PASSWORD
           value: postgres
+
 ---
 apiVersion: v1
 kind: Service
