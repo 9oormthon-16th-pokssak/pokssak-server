@@ -51,6 +51,7 @@ class SecurityConfig(
             // 인증 없이 허용할 API
             authorize
                 .requestMatchers(
+                    "/v2/signup",
                     "/signup",
                     "/signin",
                     "/spots/**",

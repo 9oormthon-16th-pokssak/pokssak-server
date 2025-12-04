@@ -14,8 +14,10 @@ sealed class UserResponse {
         val key: String,
         @Schema(description = "사용자 이름")
         val name: String,
+        @Schema(description = "사용자 키워드")
+        val keyword: String,
         @Schema(description = "사용자 이메일")
-        val email: String,
+        val email: String?,
         @Schema(description = "사용자 권한")
         val role: AuthorityType,
         @Schema(description = "사용자 생성일")
@@ -28,6 +30,7 @@ sealed class UserResponse {
                     key = profile.key,
                     name = profile.name,
                     email = profile.email,
+                    keyword = profile.keyword,
                     role = profile.role,
                     createdAt = profile.createdAt,
                 )

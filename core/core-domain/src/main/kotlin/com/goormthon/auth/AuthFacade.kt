@@ -33,4 +33,11 @@ class AuthFacade(
             val token = authService.generateToken(AuthCommand.GenerateToken.toCommand(credential))
             return@writeable token
         }
+
+    fun signupV2(command: AuthCommand.SignupV2): Token =
+        Tx.writeable {
+            val user = userService.createUserV2(command.toUserCommand())
+            val token = authService.generateToken(AuthCommand.GenerateToken.toCommand(user))
+            return@writeable token
+        }
 }

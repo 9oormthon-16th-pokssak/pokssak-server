@@ -24,8 +24,9 @@ class UserEntity(
     @Column(name = "user_key")
     val userKey: String,
     var name: String,
-    var email: String,
-    var password: String,
+    var keyword: String,
+    var email: String?,
+    var password: String?,
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(10)")
     var role: AuthorityType = AuthorityType.USER,
@@ -35,6 +36,7 @@ class UserEntity(
     ) : this(
         userKey = criteria.userKey,
         name = criteria.name,
+        keyword = criteria.keyword,
         email = criteria.email,
         password = criteria.password,
         role = criteria.role,
@@ -53,6 +55,7 @@ class UserEntity(
             key = userKey,
             name = name,
             email = email,
+            keyword = keyword,
             role = role,
             createdAt = createdAt,
         )

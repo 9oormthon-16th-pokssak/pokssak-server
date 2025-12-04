@@ -3,14 +3,15 @@ package com.goormthon.storage.rdb.user.spot
 import com.goormthon.storage.rdb.support.BaseEntity
 import com.goormthon.user.spot.UserSpotVisit
 import jakarta.persistence.Entity
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 
 @Entity
 @Table(
     name = "t_user_spot_visit",
     indexes = [
-        jakarta.persistence.Index(columnList = "user_id"),
-        jakarta.persistence.Index(columnList = "spot_id"),
+        Index(columnList = "user_id"),
+        Index(columnList = "spot_id"),
     ],
 )
 class UserSpotVisitEntity(

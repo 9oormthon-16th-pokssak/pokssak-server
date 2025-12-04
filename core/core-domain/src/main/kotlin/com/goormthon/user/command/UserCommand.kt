@@ -7,6 +7,11 @@ sealed class UserCommand {
         val password: String,
     )
 
+    data class CreateV2(
+        val name: String,
+        val keyword: String,
+    )
+
     data class Update(
         val name: String?,
         val email: String?,

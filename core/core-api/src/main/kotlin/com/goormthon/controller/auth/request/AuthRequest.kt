@@ -27,6 +27,21 @@ sealed class AuthRequest {
             )
     }
 
+    data class SignupV2(
+        @Schema(description = "이름")
+        @field:NotBlank
+        val name: String,
+        @Schema(description = "키워드")
+        @field:NotBlank
+        val keyword: String,
+    ) {
+        fun toCommand() =
+            AuthCommand.SignupV2(
+                name = name,
+                keyword = keyword,
+            )
+    }
+
     data class Signin(
         @Schema(description = "이메일")
         @field:NotBlank

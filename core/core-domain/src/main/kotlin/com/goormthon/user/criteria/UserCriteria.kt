@@ -7,8 +7,9 @@ sealed class UserCriteria {
     data class Create(
         val userKey: String,
         val name: String,
-        val email: String,
-        val password: String,
+        val keyword: String,
+        val email: String?,
+        val password: String?,
         val role: AuthorityType = AuthorityType.USER,
     ) {
         companion object {
@@ -18,6 +19,16 @@ sealed class UserCriteria {
                     name = command.name,
                     email = command.email,
                     password = command.password,
+                    keyword = "",
+                )
+
+            fun of(userKey: String, command: UserCommand.CreateV2) =
+                Create(
+                    userKey = userKey,
+                    name = command.name,
+                    keyword = command.keyword,
+                    email = null,
+                    password = null,
                 )
         }
     }

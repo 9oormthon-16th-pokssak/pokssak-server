@@ -1,3 +1,5 @@
 package com.goormthon.user.spot
 
-interface UserSpotLikeRepository
+interface UserSpotLikeRepository {
+    fun existsByUserIdAndSpotId(userId: Long, spotId: Long): Boolean
+}

@@ -23,6 +23,17 @@ class AuthCommand {
             )
     }
 
+    data class SignupV2(
+        val name: String,
+        val keyword: String,
+    ) {
+        fun toUserCommand() =
+            UserCommand.CreateV2(
+                name = name,
+                keyword = keyword,
+            )
+    }
+
     data class GenerateToken(
         val userId: Long,
         val userKey: String,

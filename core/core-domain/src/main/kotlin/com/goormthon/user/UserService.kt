@@ -25,6 +25,9 @@ class UserService(
     fun createUser(command: UserCommand.Create): User =
         userRepository.save(UserCriteria.Create.of(userKeyGenerator.generate(), command))
 
+    fun createUserV2(command: UserCommand.CreateV2): User =
+        userRepository.save(UserCriteria.Create.of(userKeyGenerator.generate(), command))
+
     /**
      * 사용자 ID로 조회
      * 캐싱 적용 가능: @Cacheable(value = ["user"], key = "#userId")
@@ -77,7 +80,7 @@ class UserService(
                 UserDeletedEvent(
                     userId = user.id,
                     userKey = user.key,
-                    email = user.email,
+                    email = user.email!!,
                 ),
             )
         }

@@ -7,7 +7,8 @@ data class UserProfile(
     val id: Long,
     val key: String,
     val name: String,
-    val email: String,
+    val email: String?,
+    val keyword: String,
     val role: AuthorityType,
     val createdAt: LocalDateTime,
 )
