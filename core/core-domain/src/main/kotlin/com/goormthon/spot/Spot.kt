@@ -8,6 +8,7 @@ class Spot {
         val location: Location,
         val mapLink: String,
         val tip: String,
+        val weight: Double? = null,
     )
 
     data class Info(
@@ -18,6 +19,7 @@ class Spot {
         val location: Location,
         val mapLink: String,
         val tip: String,
+        val weight: Double? = null,
     )
 
     data class Detail(
@@ -29,6 +31,7 @@ class Spot {
         val mapLink: String,
         val tip: String,
         val tags: List<String>,
+        val weight: Double? = null,
         val isLiked: Boolean = false,
         val isVisited: Boolean = false,
     ) {
@@ -42,6 +45,7 @@ class Spot {
                     location = spot.location,
                     mapLink = spot.mapLink,
                     tip = spot.tip,
+                    weight = spot.weight,
                     tags = tags,
                     isLiked = isLiked,
                     isVisited = isVisited,

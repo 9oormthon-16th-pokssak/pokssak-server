@@ -27,4 +27,8 @@ class SpotCoreRepository(
         Tx.readable {
         spotJpaRepository.findAllBy(keyword, swLat, swLng, neLat, neLng).map { it.toInfo() }
     }
+
+    override fun updateWeight(spotId: Long, weight: Double) = Tx.requiresNew {
+        spotJpaRepository.updateWeight(spotId, weight)
+    }
 }

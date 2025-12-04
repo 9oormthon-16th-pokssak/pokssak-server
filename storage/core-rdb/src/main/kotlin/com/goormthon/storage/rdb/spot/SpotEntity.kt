@@ -24,6 +24,7 @@ class SpotEntity(
     val location: Location,
     val mapLink: String,
     val tip: String,
+    val weight: Double? = null,
 ) : BaseEntity() {
     constructor(
         create: Spot.Create,
@@ -34,6 +35,7 @@ class SpotEntity(
         location = create.location,
         mapLink = create.mapLink,
         tip = create.tip,
+        weight = create.weight,
     )
 
     fun toInfo() =
@@ -45,5 +47,6 @@ class SpotEntity(
             location = location,
             mapLink = mapLink,
             tip = tip,
+            weight = weight,
         )
 }

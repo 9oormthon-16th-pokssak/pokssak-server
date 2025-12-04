@@ -11,6 +11,7 @@ data class GeminiSpotResponse(
     val mapLink: String,
     val tip: String,
     val tags: List<String>,
+    val weight: Double = 0.0,
 ) {
     data class LocationDto(
         val latitude: Double,
@@ -31,5 +32,6 @@ data class GeminiSpotResponse(
         location = location.toDomain(),
         mapLink = mapLink,
         tip = tip,
+        weight = weight,
     )
 }

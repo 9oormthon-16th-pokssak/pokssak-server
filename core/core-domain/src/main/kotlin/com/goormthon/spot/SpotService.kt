@@ -32,6 +32,16 @@ class SpotService(
         )
     }
 
-    fun findAllBy(keyword: String?, swLat: Double?, swLng: Double?, neLat: Double?, neLng: Double?, userId: Long): List<Spot.Info> =
-        spotRepository.findAllBy(keyword, swLat, swLng, neLat, neLng)
+    fun findAllBy(
+        keyword: String?,
+        swLat: Double?,
+        swLng: Double?,
+        neLat: Double?,
+        neLng: Double?,
+        userId: Long,
+    ): List<Spot.Info> = spotRepository.findAllBy(keyword, swLat, swLng, neLat, neLng)
+
+    fun updateSpotWeight(spotId: Long, weight: Double) {
+        spotRepository.updateWeight(spotId, weight)
+    }
 }

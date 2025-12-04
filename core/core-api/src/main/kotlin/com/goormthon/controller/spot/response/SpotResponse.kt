@@ -20,6 +20,8 @@ data class SpotResponse(
     val mapLink: String,
     @Schema(description = "팁", example = "오후 2시 이후가 한적해요")
     val tip: String,
+    @Schema(description = "가중치", example = "0.85")
+    val weight: Double = 0.0,
 ) {
     companion object {
         fun from(info: Spot.Info): SpotResponse =

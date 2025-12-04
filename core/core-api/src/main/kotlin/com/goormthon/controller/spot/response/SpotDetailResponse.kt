@@ -22,6 +22,8 @@ data class SpotDetailResponse(
     val tip: String,
     @Schema(description = "장소 태그 목록", example = "[\"태그1\", \"태그2\"]")
     val tags: List<String>,
+    @Schema(description = "가중치", example = "0.0")
+    val weight: Double? = 0.0,
     @Schema(description = "사용자가 좋아요를 눌렀는지 여부", example = "false")
     val isLiked: Boolean = false,
     @Schema(description = "사용자가 방문했는지 여부", example = "false")
@@ -38,6 +40,7 @@ data class SpotDetailResponse(
                 mapLink = detail.mapLink,
                 tip = detail.tip,
                 tags = detail.tags,
+                weight = detail.weight,
                 isLiked = detail.isLiked,
                 isVisited = detail.isVisited,
             )

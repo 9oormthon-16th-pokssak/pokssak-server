@@ -1,6 +1,7 @@
 package com.goormthon.storage.rdb.spot
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -22,4 +23,11 @@ interface SpotJpaRepository : JpaRepository<SpotEntity, Long> {
         @Param("neLat") neLat: Double?,
         @Param("neLng") neLng: Double?,
     ): List<SpotEntity>
+
+    @Modifying
+    @Query("UPDATE SpotEntity s SET s.weight = :weight WHERE s.id = :spotId")
+    fun updateWeight(
+        @Param("spotId") spotId: Long,
+        @Param("weight") weight: Double,
+    )
 }
