@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.goormthon.ai.client.GeminiChatClient
 import com.goormthon.scheduler.dto.GeminiSpotResponse
+import com.goormthon.spot.SpotValidator
 import com.goormthon.spot.SpotService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Component
 class SpotScheduler(
     private val spotService: SpotService,
     private val geminiChatClient: GeminiChatClient,
+    private val spotValidator: SpotValidator,
     private val objectMapper: ObjectMapper,
 ) {
     private val logger = KotlinLogging.logger {}
 
-//    @Scheduled(cron = "* 0/10 * * * *")
+//    @Scheduled(cron = "* 0/1 * * * *")
     fun createSpotWithTagsJob() {
         try {
             val responseText = geminiChatClient.generateContent(
@@ -65,20 +67,47 @@ class SpotScheduler(
 
             logger.info { "파싱된 장소 개수: ${spots.size}" }
 
-            // 각 장소 저장
+            // 성능 최적화: findAll()을 한 번만 호출하여 기존 Spot 목록 조회
+            val existingSpots = spotService.findAllSpots().toMutableList()
+            logger.info { "기존 장소 개수: ${existingSpots.size}" }
+
+            // 각 장소 저장 (중복 검증 포함)
+            var savedCount = 0
+            var skippedCount = 0
+
             spots.forEach { geminiSpot: GeminiSpotResponse ->
                 try {
-                    spotService.createSpotWithTags(
-                        create = geminiSpot.toCreate(),
+                    val spotCreate = geminiSpot.toCreate()
+
+                    // DDD Domain Service를 통한 중복 검증 (existingSpots 재사용)
+                    val validationResult = spotValidator.validate(spotCreate, existingSpots)
+
+                    if (!validationResult.valid) {
+                        logger.warn {
+                            "중복으로 인해 저장 건너뜀 - ${geminiSpot.name}, " +
+                            "중복 필드: ${validationResult.duplicateFields.joinToString()}"
+                        }
+                        skippedCount++
+                        return@forEach
+                    }
+
+                    // 중복이 없으면 저장
+                    val savedSpot = spotService.createSpotWithTags(
+                        create = spotCreate,
                         tagNames = geminiSpot.tags,
                     )
+
+                    // 저장된 Spot을 existingSpots에 추가하여 다음 검증에 반영
+                    existingSpots.add(savedSpot)
+
+                    savedCount++
                     logger.info { "장소 저장 완료: ${geminiSpot.name}" }
                 } catch (e: Exception) {
                     logger.error(e) { "장소 저장 실패: ${geminiSpot.name}" }
                 }
             }
 
-            logger.info { "스팟 생성 작업 완료" }
+            logger.info { "스팟 생성 작업 완료 - 저장: ${savedCount}개, 중복 건너뜀: ${skippedCount}개" }
         } catch (e: Exception) {
             logger.error(e) { "스팟 생성 작업 실패" }
         }

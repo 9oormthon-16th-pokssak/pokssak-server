@@ -12,4 +12,8 @@ class SpotCoreRepository(
         val savedEntity = spotJpaRepository.save(SpotEntity(create))
         return savedEntity.toInfo()
     }
+
+    override fun findAll(): List<Spot.Info> {
+        return spotJpaRepository.findAll().map { it.toInfo() }
+    }
 }
