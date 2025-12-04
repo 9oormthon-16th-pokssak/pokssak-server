@@ -8,9 +8,8 @@ class SpotService(
     private val spotRepository: SpotRepository,
     private val spotTagRepository: SpotTagRepository,
 ) {
-    fun findAllSpots(): List<Spot.Info> = Tx.readable {
+    fun findAllSpots(): List<Spot.Info> =
         spotRepository.findAll()
-    }
 
     fun createSpotWithTags(create: Spot.Create, tagNames: List<String>): Spot.Info = Tx.requiresNew {
         val spotInfo = spotRepository.save(create)
