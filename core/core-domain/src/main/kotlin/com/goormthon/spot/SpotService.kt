@@ -32,6 +32,10 @@ class SpotService(
         )
     }
 
+    fun findAllByIds(spotIds: List<Long>): List<Spot.Info> {
+        return spotRepository.findAllByIds(spotIds)
+    }
+
     fun findAllBy(
         keyword: String?,
         swLat: Double?,
@@ -43,5 +47,9 @@ class SpotService(
 
     fun updateSpotWeight(spotId: Long, weight: Double) {
         spotRepository.updateWeight(spotId, weight)
+    }
+
+    fun findByKeyword(keyword: String): List<Spot.Info> {
+        return spotRepository.findAllBy(keyword, null, null, null, null)
     }
 }

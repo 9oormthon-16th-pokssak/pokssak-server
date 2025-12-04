@@ -30,4 +30,6 @@ interface SpotJpaRepository : JpaRepository<SpotEntity, Long> {
         @Param("spotId") spotId: Long,
         @Param("weight") weight: Double,
     )
+
+    fun findAllByIdInAndDeletedAtIsNull(spotIds: List<Long>): List<SpotEntity>
 }

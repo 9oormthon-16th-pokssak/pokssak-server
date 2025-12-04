@@ -31,4 +31,8 @@ class SpotCoreRepository(
     override fun updateWeight(spotId: Long, weight: Double) = Tx.requiresNew {
         spotJpaRepository.updateWeight(spotId, weight)
     }
+
+    override fun findAllByIds(spotIds: List<Long>): List<Spot.Info> = Tx.readable {
+            spotJpaRepository.findAllByIdInAndDeletedAtIsNull(spotIds).map { it.toInfo() }
+        }
 }

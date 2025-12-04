@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -44,4 +45,9 @@ class SpotController(
         @PathVariable spotId: Long,
         user: User,
     ): SpotDetailResponse = SpotDetailResponse.from(spotFacade.findDetail(spotId, user.id))
+
+    @PostMapping("/recommend")
+    fun recommendSpot(
+        user: User,
+    ): SpotAllResponse = SpotAllResponse.from(spotFacade.recommend(user.id))
 }
