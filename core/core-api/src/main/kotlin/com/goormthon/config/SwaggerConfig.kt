@@ -28,7 +28,7 @@ internal class SwaggerConfig {
         return OpenAPI()
             .info(swaggerInfo())
             .servers(
-                listOf("http://localhost:8080")
+                listOf("http://localhost:8080", "https://pokssak-api.goorm.training")
                     .map { Server().url(it) },
             ).components(authComponents())
             .addSecurityItem(SecurityRequirement().addList("accessToken"))
