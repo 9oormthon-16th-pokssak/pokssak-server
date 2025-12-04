@@ -12,4 +12,13 @@ class UserSpotVisitCoreRepository(
         Tx.readable {
             userSpotVisitJpaRepository.existsByUserIdAndSpotIdAndDeletedAtIsNull(userId, spotId)
         }
+
+    override fun visitSpot(userId: Long, spotId: Long) =
+        Tx.writeable {
+            val existingVisit = userSpotVisitJpaRepository.findByUserIdAndSpotIdAndDeletedAtIsNull(userId, spotId)
+            if (existingVisit == null) {
+                val newVisit = UserSpotVisitEntity(userId = userId, spotId = spotId)
+                userSpotVisitJpaRepository.save(newVisit)
+            }
+        }
 }

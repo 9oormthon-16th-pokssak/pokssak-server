@@ -8,4 +8,10 @@ class UserSpotLikeService(
 ) {
     fun isUserLikedSpot(userId: Long, spotId: Long): Boolean =
         userSpotLikeRepository.existsByUserIdAndSpotId(userId, spotId)
+
+    fun likeSpot(userId: Long, spotId: Long) =
+        userSpotLikeRepository.likeSpot(userId, spotId)
+
+    fun dislikeSpot(userId: Long, spotId: Long) =
+        userSpotLikeRepository.dislikeSpot(userId, spotId)
 }
