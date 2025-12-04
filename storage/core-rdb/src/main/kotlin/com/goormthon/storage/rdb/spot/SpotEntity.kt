@@ -5,10 +5,17 @@ import com.goormthon.spot.Spot
 import com.goormthon.storage.rdb.support.BaseEntity
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "t_spot")
+@Table(
+    name = "t_spot",
+    indexes = [
+        Index(name = "idx_spot_keyword", columnList = "keyword"),
+        Index(name = "idx_spot_location", columnList = "latitude, longitude"),
+    ],
+)
 class SpotEntity(
     val keyword: String,
     val name: String,

@@ -22,4 +22,16 @@ class SpotService(
         spotTagRepository.saveAll(spotTagsCreate)
         return@requiresNew spotInfo
     }
+
+    fun findBy(spotId: Long): FindSpotResult {
+        val spot = spotRepository.findBy(spotId)
+        val spotTags = spotTagRepository.findBySpotId(spotId).map { it.name }
+        return FindSpotResult(
+            spot = spot,
+            tags = spotTags,
+        )
+    }
+
+    fun findAllBy(keyword: String?, swLat: Double?, swLng: Double?, neLat: Double?, neLng: Double?, userId: Long): List<Spot.Info> =
+        spotRepository.findAllBy(keyword, swLat, swLng, neLat, neLng)
 }

@@ -2,6 +2,7 @@ package com.goormthon.storage.rdb.spot
 
 import com.goormthon.spot.SpotTag
 import com.goormthon.spot.SpotTagRepository
+import com.goormthon.support.tx.Tx
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -17,5 +18,10 @@ class SpotTagCoreRepository(
         val entities = creates.map { SpotTagEntity(it) }
         val savedEntities = spotTagJpaRepository.saveAll(entities)
         return savedEntities.map { it.toSpotTag() }
+    }
+
+    override fun findBySpotId(spotId: Long): List<SpotTag.Info> = Tx.readable {
+        val entities = spotTagJpaRepository.findBySpotId(spotId)
+        return@readable entities.map { it.toSpotTag() }
     }
 }
