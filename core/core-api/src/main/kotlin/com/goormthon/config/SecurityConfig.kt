@@ -53,6 +53,7 @@ class SecurityConfig(
                 .requestMatchers(
                     "/signup",
                     "/signin",
+                    "/spots/**"
                 ).permitAll()
 
             // 추가로 열어줄 API

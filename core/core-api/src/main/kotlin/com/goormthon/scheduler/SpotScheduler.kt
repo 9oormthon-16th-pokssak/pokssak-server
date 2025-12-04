@@ -7,6 +7,7 @@ import com.goormthon.scheduler.dto.GeminiSpotResponse
 import com.goormthon.spot.SpotValidator
 import com.goormthon.spot.SpotService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,7 +19,7 @@ class SpotScheduler(
 ) {
     private val logger = KotlinLogging.logger {}
 
-//    @Scheduled(cron = "* 0/1 * * * *")
+    @Scheduled(cron = "* 0/10 * * * *")
     fun createSpotWithTagsJob() {
         try {
             val responseText = geminiChatClient.generateContent(
