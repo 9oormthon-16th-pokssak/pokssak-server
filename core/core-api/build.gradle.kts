@@ -16,6 +16,7 @@ dependencies {
 
     implementation(project(":core:core-enum"))
     implementation(project(":core:core-domain"))
+    implementation(project(":external:ai"))
     implementation(project(":storage:core-rdb"))
     implementation(project(":storage:redis"))
 

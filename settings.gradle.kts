@@ -4,6 +4,7 @@ include(
     "core:core-enum",
     "core:core-api",
     "core:core-domain",
+    "external:ai",
     "storage:core-rdb",
     "storage:redis",
 )
