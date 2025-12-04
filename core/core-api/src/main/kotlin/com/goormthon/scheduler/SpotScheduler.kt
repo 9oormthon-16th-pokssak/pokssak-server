@@ -21,7 +21,7 @@ class SpotScheduler(
     private val logger = KotlinLogging.logger {}
 
     // 기존 장소 데이터 가중치 재산정
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 */2 * * *")
     fun recalculateSpotWeightsJob() {
         try {
             val allSpots = spotService.findAllSpots()
@@ -113,6 +113,8 @@ class SpotScheduler(
     @Scheduled(cron = "* 0/10 * * * *")
     fun createSpotWithTagsJob() {
         try {
+            val existingSpots = spotService.findAllSpots().toMutableList()
+            val spotNames = existingSpots.map { it.name }.toSet()
             val responseText = geminiChatClient.generateContent(
                 prompt = """
                     너는 제주도 여행 전문가이자 백엔드 데이터 생성기야.
@@ -125,8 +127,8 @@ class SpotScheduler(
                     3. 중복된 장소가 없어야 함.
                     4. 설명(description)과 팁(tip)은 한국어로, 친절하고 구체적으로 작성.
                     5. 위경도(latitude, longitude)는 실제 구글맵 기준 데이터여야 함. 진짜 정확한 위경도를 넣어야해. 한번 검증을 진행해보고 넣는 것이 좋아.
-                    6. "숨은 맛집", "찐맛집", "로컬 맛집", "도민 맛집", "제주도민 맛집", "현지인 맛집", "관광객 모르는 곳", "동네 사람들이 가는", "로컬 바이브" 해당 키워드 초점으로 큐레이션을 해줬으면 좋겠어.
-                    7. 그리고 가중치(weight)라는 것이 있어. 가중치는 0.0에서 1.0 사이의 값으로, 장소의 중요도나 인기도를 나타내. 1.0에 가까울수록 더 중요하거나 인기 있는 장소야. 각 장소마다 적절한 가중치를 부여해줘.
+                    6. 그리고 가중치(weight)라는 것이 있어. 가중치는 0.0에서 1.0 사이의 값으로, 장소의 중요도나 인기도를 나타내. 1.0에 가까울수록 더 중요하거나 인기 있는 장소야. 각 장소마다 적절한 가중치를 부여해줘.
+                    7. ${spotNames.joinToString(", ")} 이 장소들은 이미 데이터베이스에 있어. 이 장소들은 절대 포함하지 마.
 
                     [JSON 데이터 스키마]
                     응답은 아래 구조를 가진 객체들의 배열([])이어야 한다.
@@ -145,7 +147,7 @@ class SpotScheduler(
                       "weight": Double (0.0에서 1.0 사이의 가중치 값)
                     }
                 """.trimIndent(),
-                contents = "제주도의 숨은 명소와 인기 명소를 섞어서, 위 5개 키워드별로 각각 5곳씩 추천해줘.",
+                contents = "제주도의 숨은 명소와 인기 명소를 섞어서, 위 5개 키워드별로 각각 10곳씩 추천해줘.",
             )
 
             if (responseText == null) {
@@ -162,7 +164,6 @@ class SpotScheduler(
             logger.info { "파싱된 장소 개수: ${spots.size}" }
 
             // 성능 최적화: findAll()을 한 번만 호출하여 기존 Spot 목록 조회
-            val existingSpots = spotService.findAllSpots().toMutableList()
             logger.info { "기존 장소 개수: ${existingSpots.size}" }
 
             // 각 장소 저장 (중복 검증 포함)

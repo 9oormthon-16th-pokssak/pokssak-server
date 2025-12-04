@@ -27,7 +27,7 @@ class SpotController(
         @RequestParam @Parameter(name = "swLng", description = "남서쪽 경도") swLng: Double?,
         @RequestParam @Parameter(name = "neLat", description = "북동쪽 위도") neLat: Double?,
         @RequestParam @Parameter(name = "neLng", description = "북동쪽 경도") neLng: Double?,
-        user: User,
+        @Parameter(hidden = true) user: User,
     ): SpotAllResponse =
         SpotAllResponse.from(
             spotFacade.findAllSpots(
@@ -43,11 +43,11 @@ class SpotController(
     @GetMapping("/{spotId}")
     fun findSpotDetail(
         @PathVariable spotId: Long,
-        user: User,
+        @Parameter(hidden = true) user: User,
     ): SpotDetailResponse = SpotDetailResponse.from(spotFacade.findDetail(spotId, user.id))
 
     @PostMapping("/recommend")
     fun recommendSpot(
-        user: User,
+        @Parameter(hidden = true) user: User,
     ): SpotAllResponse = SpotAllResponse.from(spotFacade.recommend(user.id))
 }
