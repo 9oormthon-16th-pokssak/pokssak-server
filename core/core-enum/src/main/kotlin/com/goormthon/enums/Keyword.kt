@@ -7,5 +7,5 @@ enum class Keyword(
     LOCAL("로컬스러운"),
     ACTIVE("활동적인"),
     NATURE("자연적인"),
-    POPULAR("많이 찾는"),
+    POPULAR("핫플레이스"),
 }
